@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from ultralytics import YOLO
 import cv2
 import detect_tools as tools
-import paddleocr
+# import paddleocr
 import numpy as np
 from PIL import ImageFont
 import io
@@ -12,9 +12,9 @@ import io
 app = Flask(__name__)
 
 # 初始化 OCR 模型
-cls_model_dir = 'ch_ppocr_mobile_v2.0_cls_infer'
-rec_model_dir = 'ch_PP-OCRv4_rec_infer'
-ocr = paddleocr.PaddleOCR(use_angle_cls=False, lang="ch", det=False, cls_model_dir=cls_model_dir, rec_model_dir=rec_model_dir)
+# cls_model_dir = 'ch_ppocr_mobile_v2.0_cls_infer'
+# rec_model_dir = 'ch_PP-OCRv4_rec_infer'
+# ocr = paddleocr.PaddleOCR(use_angle_cls=False, lang="ch", det=False, cls_model_dir=cls_model_dir, rec_model_dir=rec_model_dir)
 
 # 初始化 YOLO 模型
 path = 'best.pt'
@@ -42,6 +42,8 @@ def detect_license_plate():
     车牌检测与识别 API
     """
     # 检查是否有文件上传
+    print("Request files:", request.files)
+
     if 'file' not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
 
@@ -56,7 +58,7 @@ def detect_license_plate():
 
     # 如果没有检测到车牌
     if len(location_list) == 0:
-        return jsonify({"message": "No license plate detected"}), 200
+        return jsonify({"message": "未识别到车牌"}), 200
 
     # 截取车牌区域并识别
     license_imgs = []
@@ -66,17 +68,20 @@ def detect_license_plate():
         license_imgs.append(cropImg)
 
     # 识别车牌号码
-    license_results = []
-    for each in license_imgs:
-        license_num, conf = get_license_result(ocr, each)
-        license_results.append({
-            "license_number": license_num if license_num else "无法识别",
-            "confidence": float(conf) if conf else 0.0
-        })
+    # license_results = []
+    # for each in license_imgs:
+    #     license_num, conf = get_license_result(ocr, each)
+    #     license_results.append({
+    #         "license_number": license_num if license_num else "无法识别",
+    #         "confidence": float(conf) if conf else 0.0
+    #     })
+    print(license_imgs)
 
     # 返回结果
     return jsonify({
-        "detected_plates": license_results
+        "detected_plates": '识别到车牌区域'
+
+        # "detected_plates": license_results
     })
 
 if __name__ == '__main__':

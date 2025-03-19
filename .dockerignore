@@ -1,0 +1,7 @@
+.git
+__pycache__
+*.pyc
+CCPD2020
+dist
+.venv
+packages
