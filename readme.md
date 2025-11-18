@@ -1,4 +1,4 @@
-离线安装依赖：
+Offline installation：
 cd (.venv) PS D:\plate\packages>
 pip install -r dev.txt
 
